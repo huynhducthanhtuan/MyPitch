@@ -24,16 +24,16 @@ Khi chưa cấu hình MockAPI, ứng dụng chạy ở chế độ xem trước 
 
 Ứng dụng gửi `GET` để đọc danh sách, `POST` để tạo, `PUT /matches/:id` để cập nhật và `DELETE /matches/:id` để xóa. Các trường của resource:
 
-| Trường | Kiểu | Ý nghĩa |
-| --- | --- | --- |
-| `opponent` | string | Tên đối thủ |
-| `competition` | string | Giải đấu |
-| `date` | string | Ngày thi đấu (`YYYY-MM-DD`) |
-| `time` | string | Giờ thi đấu (`HH:mm`) |
-| `venue` | string | Tên sân |
-| `status` | string | `scheduled` hoặc `played` |
-| `teamScore`, `opponentScore` | number hoặc null | Tỷ số hai đội |
-| `goals`, `assists`, `minutes` | number | Chỉ số cá nhân |
+| Trường                        | Kiểu             | Ý nghĩa                     |
+| ----------------------------- | ---------------- | --------------------------- |
+| `opponent`                    | string           | Tên đối thủ                 |
+| `competition`                 | string           | Giải đấu                    |
+| `date`                        | string           | Ngày thi đấu (`YYYY-MM-DD`) |
+| `time`                        | string           | Giờ thi đấu (`HH:mm`)       |
+| `venue`                       | string           | Tên sân                     |
+| `status`                      | string           | `scheduled` hoặc `played`   |
+| `teamScore`, `opponentScore`  | number hoặc null | Tỷ số hai đội               |
+| `goals`, `assists`, `minutes` | number           | Chỉ số cá nhân              |
 
 Tỷ lệ thắng/hòa/thua được tính từ tỷ số, tránh lưu trạng thái kết quả không khớp với bàn thắng hai đội. Chỉ số tổng hợp được lọc theo năm đã chọn; biểu đồ cho phép chọn tháng để lọc danh sách trận.
 
