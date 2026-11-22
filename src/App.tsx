@@ -37,32 +37,32 @@ const today = (() => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 })();
 const monthLabels = [
-  "T1",
-  "T2",
-  "T3",
-  "T4",
-  "T5",
-  "T6",
-  "T7",
-  "T8",
-  "T9",
-  "T10",
-  "T11",
-  "T12",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 const monthNames = [
-  "Tháng 1",
-  "Tháng 2",
-  "Tháng 3",
-  "Tháng 4",
-  "Tháng 5",
-  "Tháng 6",
-  "Tháng 7",
-  "Tháng 8",
-  "Tháng 9",
-  "Tháng 10",
-  "Tháng 11",
-  "Tháng 12",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 type Outcome = "win" | "draw" | "loss";
@@ -83,7 +83,7 @@ function formatDate(
   date: string,
   options: Intl.DateTimeFormatOptions = { day: "2-digit", month: "short" },
 ) {
-  return new Intl.DateTimeFormat("vi-VN", options).format(
+  return new Intl.DateTimeFormat("en-US", options).format(
     new Date(`${date}T00:00:00`),
   );
 }
@@ -122,7 +122,7 @@ function App() {
       setError(
         loadError instanceof Error
           ? loadError.message
-          : "Không thể tải dữ liệu trận đấu.",
+          : "Unable to load match data.",
       );
     } finally {
       setLoading(false);
@@ -140,7 +140,7 @@ function App() {
           setError(
             loadError instanceof Error
               ? loadError.message
-              : "Không thể tải dữ liệu trận đấu.",
+              : "Unable to load match data.",
           );
       })
       .finally(() => {
@@ -203,7 +203,7 @@ function App() {
   const monthStats =
     selectedMonth === null ? null : monthlyStats[selectedMonth];
   const visibleMatches = useMemo(() => {
-    const term = query.trim().toLocaleLowerCase("vi");
+    const term = query.trim().toLocaleLowerCase("en-US");
     return yearMatches
       .filter(
         (match) =>
@@ -214,7 +214,7 @@ function App() {
         (match) =>
           !term ||
           `${match.opponent} ${match.venue} ${match.competition}`
-            .toLocaleLowerCase("vi")
+            .toLocaleLowerCase("en-US")
             .includes(term),
       )
       .sort(
@@ -273,7 +273,7 @@ function App() {
         teamScore === null ||
         opponentScore === null)
     ) {
-      setError("Vui lòng nhập tỷ số hai đội cho trận đã kết thúc.");
+      setError("Please enter both team scores for a played match.");
       return;
     }
     if (
@@ -287,7 +287,7 @@ function App() {
         (value) => value !== null && (!Number.isInteger(value) || value < 0),
       )
     ) {
-      setError("Các chỉ số và tỷ số phải là số nguyên không âm.");
+      setError("Stats and scores must be non-negative integers.");
       return;
     }
 
@@ -306,7 +306,7 @@ function App() {
       setError(
         saveError instanceof Error
           ? saveError.message
-          : "Không thể lưu trận đấu.",
+          : "Unable to save the match.",
       );
     } finally {
       setSaving(false);
@@ -314,7 +314,7 @@ function App() {
   };
 
   const handleDelete = async (match: MatchRecord) => {
-    if (!match.id || !window.confirm(`Xóa trận đấu với ${match.opponent}?`))
+    if (!match.id || !window.confirm(`Delete the match against ${match.opponent}?`))
       return;
     setError("");
     try {
@@ -324,7 +324,7 @@ function App() {
       setError(
         deleteError instanceof Error
           ? deleteError.message
-          : "Không thể xóa trận đấu.",
+          : "Unable to delete the match.",
       );
     }
   };
@@ -352,28 +352,28 @@ function App() {
           </span>
         </a>
 
-        <div className="nav-caption">KHÔNG GIAN CỦA BẠN</div>
-        <nav className="side-nav" aria-label="Điều hướng chính">
+        <div className="nav-caption">YOUR SPACE</div>
+        <nav className="side-nav" aria-label="Main navigation">
           <a
             className="nav-link active"
             href="#overview"
             onClick={() => setMobileMenuOpen(false)}
           >
-            <Activity size={18} /> Tổng quan
+            <Activity size={18} /> Overview
           </a>
           <a
             className="nav-link"
             href="#matches"
             onClick={() => setMobileMenuOpen(false)}
           >
-            <CalendarDays size={18} /> Lịch thi đấu
+            <CalendarDays size={18} /> Fixtures
           </a>
           <a
             className="nav-link"
             href="#performance"
             onClick={() => setMobileMenuOpen(false)}
           >
-            <Trophy size={18} /> Thống kê
+            <Trophy size={18} /> Statistics
           </a>
         </nav>
 
@@ -383,7 +383,7 @@ function App() {
               <Shield size={18} />
             </div>
             <div>
-              <span>MÙA GIẢI</span>
+              <span>SEASON</span>
               <strong>{year} season</strong>
             </div>
             <ChevronDown size={15} />
@@ -391,13 +391,13 @@ function App() {
           <div className="player-profile">
             <div className="profile-avatar">ME</div>
             <div className="profile-copy">
-              <strong>Cầu thủ của bạn</strong>
-              <span>Hồ sơ cá nhân</span>
+              <strong>Your profile</strong>
+              <span>Player profile</span>
             </div>
             <button
               type="button"
               className="icon-button profile-menu"
-              aria-label="Thông tin hồ sơ"
+              aria-label="Profile information"
             >
               <Menu size={17} />
             </button>
@@ -410,19 +410,19 @@ function App() {
           <button
             type="button"
             className="icon-button mobile-menu-button"
-            aria-label="Mở menu"
+            aria-label="Open menu"
             onClick={() => setMobileMenuOpen((open) => !open)}
           >
             <Menu size={20} />
           </button>
           <div className="breadcrumbs">
-            <span>Không gian của bạn</span>
+            <span>Your space</span>
             <span className="crumb-slash">/</span>
-            <strong>Tổng quan</strong>
+            <strong>Overview</strong>
           </div>
           <div className="topbar-actions">
             <label className="year-select-wrap">
-              <span className="sr-only">Chọn năm</span>
+              <span className="sr-only">Choose year</span>
               <CalendarDays size={16} />
               <select
                 value={year}
@@ -444,7 +444,7 @@ function App() {
               className="button button-primary top-add"
               onClick={openNewMatch}
             >
-              <Plus size={17} /> Thêm trận đấu
+              <Plus size={17} /> Add match
             </button>
           </div>
         </header>
@@ -453,9 +453,9 @@ function App() {
           {getDataMode() === "local" && (
             <div className="connection-banner">
               <span className="connection-dot" />
-              Đang ở chế độ xem trước — dữ liệu lưu trên trình duyệt này.
+              Preview mode — your data is stored in this browser.
               <span>
-                Thêm <code>VITE_MOCKAPI_URL</code> để đồng bộ với MockAPI.
+                Add <code>VITE_MOCKAPI_URL</code> to sync with MockAPI.
               </span>
             </div>
           )}
@@ -468,12 +468,12 @@ function App() {
                 className="text-button"
                 onClick={() => void loadMatches()}
               >
-                Thử lại
+                Retry
               </button>
               <button
                 type="button"
                 className="icon-button"
-                aria-label="Đóng thông báo"
+                aria-label="Close notification"
                 onClick={() => setError("")}
               >
                 <X size={16} />
@@ -484,91 +484,91 @@ function App() {
           <section className="welcome-row">
             <div>
               <div className="eyebrow">
-                <span className="eyebrow-line" /> MÙA GIẢI {year}
+                <span className="eyebrow-line" /> SEASON {year}
               </div>
               <h1>
-                Hành trình của <em>bạn.</em>
+                Your <em>journey.</em>
               </h1>
               <p className="welcome-subtitle">
-                Mỗi trận đấu là một dấu mốc. Cùng nhìn lại màn trình diễn của
-                bạn trong năm nay.
+                Every match is a milestone. Look back at your performance
+                this season.
               </p>
             </div>
             <div className="welcome-note">
               <Sparkles size={16} />
               <span>
-                Thống kê được cập nhật
+                Stats update
                 <br />
-                <strong>sau từng trận đấu</strong>
+                <strong>after every match</strong>
               </span>
             </div>
           </section>
 
-          <section className="metrics-grid" aria-label="Chỉ số trong năm">
+          <section className="metrics-grid" aria-label="Yearly statistics">
             <article className="metric-card metric-primary">
               <div className="metric-top">
-                <span>SỐ TRẬN ĐÃ ĐẤU</span>
+                <span>MATCHES PLAYED</span>
                 <span className="metric-icon">
                   <Swords size={17} />
                 </span>
               </div>
               <div className="metric-value">
                 {loading ? "—" : stats.matches}
-                <span className="metric-unit">trận</span>
+                <span className="metric-unit">matches</span>
               </div>
               <div className="metric-foot">
-                <span className="metric-dot" /> Trong năm {year}
+                <span className="metric-dot" /> In {year}
               </div>
             </article>
             <article className="metric-card">
               <div className="metric-top">
-                <span>BÀN THẮNG</span>
+                <span>GOALS</span>
                 <span className="metric-icon mint">
                   <Goal size={17} />
                 </span>
               </div>
               <div className="metric-value">
                 {loading ? "—" : stats.goals}
-                <span className="metric-unit">bàn</span>
+                <span className="metric-unit">goals</span>
               </div>
               <div className="metric-foot">
                 <span className="metric-highlight">
-                  Trung bình{" "}
+                  Average{" "}
                   {stats.matches
                     ? (stats.goals / stats.matches).toFixed(1)
                     : "0.0"}
                 </span>{" "}
-                bàn / trận
+                goals / match
               </div>
             </article>
             <article className="metric-card">
               <div className="metric-top">
-                <span>KIẾN TẠO</span>
+                <span>ASSISTS</span>
                 <span className="metric-icon orange">
                   <Sparkles size={17} />
                 </span>
               </div>
               <div className="metric-value">
                 {loading ? "—" : stats.assists}
-                <span className="metric-unit">lần</span>
+                <span className="metric-unit">assists</span>
               </div>
               <div className="metric-foot">
                 <span className="metric-highlight">
                   {stats.assists + stats.goals}
                 </span>{" "}
-                đóng góp bàn thắng
+                goal contributions
               </div>
             </article>
             <article className="metric-card">
               <div className="metric-top">
-                <span>PHÚT THI ĐẤU</span>
+                <span>MINUTES PLAYED</span>
                 <span className="metric-icon blue">
                   <Clock3 size={17} />
                 </span>
               </div>
               <div className="metric-value">
-                {loading ? "—" : stats.minutes.toLocaleString("vi-VN")}
-                <span className="metric-unit">phút</span>
+                {loading ? "—" : stats.minutes.toLocaleString("en-US")}
+                <span className="metric-unit">minutes</span>
               </div>
               <div className="metric-foot">
                 <span className="metric-highlight">
@@ -576,7 +576,7 @@ function App() {
                     ? Math.round(stats.minutes / stats.matches)
                     : 0}
                 </span>{" "}
-                phút / trận
+                minutes / match
               </div>
             </article>
           </section>
@@ -585,37 +585,37 @@ function App() {
             <article className="panel performance-panel">
               <div className="panel-heading">
                 <div>
-                  <div className="section-kicker">PHONG ĐỘ CỦA BẠN</div>
-                  <h2>Nhịp điệu mùa giải</h2>
+                  <div className="section-kicker">YOUR PERFORMANCE</div>
+                  <h2>Season rhythm</h2>
                 </div>
                 <button
                   type="button"
                   className={`select-pill ${selectedMonth === null ? "selected" : ""}`}
                   onClick={() => setSelectedMonth(null)}
                 >
-                  Cả năm <ChevronDown size={14} />
+                  Full year <ChevronDown size={14} />
                 </button>
               </div>
               <div className="chart-summary">
                 <div>
                   <strong>{monthStats ? monthStats.goals : stats.goals}</strong>
-                  <span>BÀN THẮNG</span>
+                  <span>GOALS</span>
                 </div>
                 <div className="summary-separator" />
                 <div>
                   <strong>
                     {monthStats ? monthStats.matches : stats.matches}
                   </strong>
-                  <span>TRẬN ĐÃ ĐẤU</span>
+                  <span>MATCHES PLAYED</span>
                 </div>
                 <div className="chart-legend">
-                  <span /> Bàn thắng
+                  <span /> Goals
                 </div>
               </div>
               <div
                 className="bar-chart"
                 role="group"
-                aria-label="Bàn thắng theo tháng"
+                aria-label="Goals by month"
               >
                 {monthlyStats.map((month, index) => {
                   const height = month.goals
@@ -629,7 +629,7 @@ function App() {
                       onClick={() =>
                         setSelectedMonth(selectedMonth === index ? null : index)
                       }
-                      aria-label={`${monthNames[index]}: ${month.goals} bàn, ${month.matches} trận`}
+                      aria-label={`${monthNames[index]}: ${month.goals} goals, ${month.matches} matches`}
                       aria-pressed={selectedMonth === index}
                     >
                       <span className="bar-count">{month.goals || ""}</span>
@@ -648,8 +648,8 @@ function App() {
               </div>
               <div className="chart-footnote">
                 <span>
-                  <span className="footnote-dot" /> Tháng có trận đấu sẽ tự động
-                  được ghi nhận
+                  <span className="footnote-dot" /> Months with matches are
+                  recorded automatically
                 </span>
                 <span>{year}</span>
               </div>
@@ -658,30 +658,30 @@ function App() {
             <article className="panel record-panel">
               <div className="panel-heading">
                 <div>
-                  <div className="section-kicker">KẾT QUẢ TẬP THỂ</div>
-                  <h2>Bảng thành tích</h2>
+                  <div className="section-kicker">TEAM RESULTS</div>
+                  <h2>Record</h2>
                 </div>
                 <span className="record-year">{year}</span>
               </div>
               <div className="record-score">
                 <div className="win-stat">
                   <strong>{loading ? "—" : stats.wins}</strong>
-                  <span>Thắng</span>
+                  <span>Wins</span>
                 </div>
                 <div className="record-divider" />
                 <div className="draw-stat">
                   <strong>{loading ? "—" : stats.draws}</strong>
-                  <span>Hòa</span>
+                  <span>Draws</span>
                 </div>
                 <div className="record-divider" />
                 <div className="loss-stat">
                   <strong>{loading ? "—" : stats.losses}</strong>
-                  <span>Thua</span>
+                  <span>Losses</span>
                 </div>
               </div>
               <div className="winrate-box">
                 <div className="winrate-label">
-                  <span>TỶ LỆ CHIẾN THẮNG</span>
+                  <span>WIN RATE</span>
                   <strong>{winRate}%</strong>
                 </div>
                 <div className="winrate-track">
@@ -695,11 +695,11 @@ function App() {
                 <span>
                   {stats.matches ? (
                     <>
-                      Bạn đã góp mặt trong{" "}
-                      <strong>{stats.matches} trận đấu</strong> năm nay.
+                      You appeared in{" "}
+                      <strong>{stats.matches} matches</strong> this season.
                     </>
                   ) : (
-                    <>Bắt đầu ghi lại trận đấu đầu tiên của bạn.</>
+                    <>Start by recording your first match.</>
                   )}
                 </span>
               </div>
@@ -709,20 +709,20 @@ function App() {
           <section className="matches-section" id="matches">
             <div className="matches-heading">
               <div>
-                <div className="section-kicker">NHẬT KÝ SÂN CỎ</div>
+                <div className="section-kicker">MATCH JOURNAL</div>
                 <h2>
-                  Lịch thi đấu & kết quả{" "}
+                  Fixtures & results{" "}
                   <span className="match-count">{visibleMatches.length}</span>
                 </h2>
               </div>
               <div className="match-tools">
                 <label className="search-field">
                   <Search size={16} />
-                  <span className="sr-only">Tìm trận đấu</span>
+                  <span className="sr-only">Search matches</span>
                   <input
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
-                    placeholder="Tìm đối thủ, sân đấu..."
+                    placeholder="Search opponent or venue..."
                   />
                 </label>
                 <button
@@ -730,15 +730,14 @@ function App() {
                   className="button button-secondary"
                   onClick={openNewMatch}
                 >
-                  <Plus size={16} /> Thêm trận
+                  <Plus size={16} /> Add match
                 </button>
               </div>
             </div>
             <div className="table-card">
               {loading ? (
                 <div className="empty-state">
-                  <span className="loading-spinner" /> Đang tải dữ liệu trận
-                  đấu...
+                  <span className="loading-spinner" /> Loading matches...
                 </div>
               ) : visibleMatches.length === 0 ? (
                 <div className="empty-state">
@@ -747,13 +746,13 @@ function App() {
                   </div>
                   <strong>
                     {query || selectedMonth !== null
-                      ? "Không tìm thấy trận đấu"
-                      : "Chưa có trận đấu nào"}
+                      ? "No matches found"
+                      : "No matches yet"}
                   </strong>
                   <span>
                     {query || selectedMonth !== null
-                      ? "Thử từ khóa khác hoặc chọn xem cả năm."
-                      : "Thêm lịch đấu để bắt đầu theo dõi hành trình của bạn."}
+                      ? "Try another keyword or view the full year."
+                      : "Add a fixture to start tracking your journey."}
                   </span>
                   {!query && selectedMonth === null && (
                     <button
@@ -761,7 +760,7 @@ function App() {
                       className="button button-primary"
                       onClick={openNewMatch}
                     >
-                      <Plus size={16} /> Thêm trận đấu đầu tiên
+                      <Plus size={16} /> Add your first match
                     </button>
                   )}
                 </div>
@@ -770,14 +769,14 @@ function App() {
                   <table>
                     <thead>
                       <tr>
-                        <th>NGÀY & GIỜ</th>
-                        <th>ĐỐI THỦ</th>
-                        <th>SÂN / GIẢI ĐẤU</th>
-                        <th>KẾT QUẢ</th>
-                        <th>CHỈ SỐ CÁ NHÂN</th>
-                        <th>TRẠNG THÁI</th>
+                        <th>DATE & TIME</th>
+                        <th>OPPONENT</th>
+                        <th>VENUE / COMPETITION</th>
+                        <th>RESULT</th>
+                        <th>PERSONAL STATS</th>
+                        <th>STATUS</th>
                         <th>
-                          <span className="sr-only">Thao tác</span>
+                          <span className="sr-only">Actions</span>
                         </th>
                       </tr>
                     </thead>
@@ -797,18 +796,18 @@ function App() {
                                 <span className="opponent-badge">
                                   {match.opponent
                                     .slice(0, 1)
-                                    .toLocaleUpperCase("vi")}
+                                    .toLocaleUpperCase("en-US")}
                                 </span>
                                 <div>
                                   <strong>{match.opponent}</strong>
-                                  <span>{match.competition || "Giao hữu"}</span>
+                                  <span>{match.competition || "Friendly"}</span>
                                 </div>
                               </div>
                             </td>
                             <td>
                               <div className="venue-cell">
                                 <MapPin size={14} />
-                                <span>{match.venue || "Chưa cập nhật"}</span>
+                                <span>{match.venue || "Not set"}</span>
                               </div>
                             </td>
                             <td>
@@ -819,10 +818,10 @@ function App() {
                                   </strong>
                                   <span className={`outcome-text ${outcome}`}>
                                     {outcome === "win"
-                                      ? "Thắng"
+                                      ? "Win"
                                       : outcome === "draw"
-                                        ? "Hòa"
-                                        : "Thua"}
+                                        ? "Draw"
+                                        : "Loss"}
                                   </span>
                                 </div>
                               ) : (
@@ -846,11 +845,11 @@ function App() {
                               <span className={`status-badge ${match.status}`}>
                                 {match.status === "played" ? (
                                   <>
-                                    <Check size={12} /> Đã kết thúc
+                                    <Check size={12} /> Played
                                   </>
                                 ) : (
                                   <>
-                                    <span className="status-dot" /> Sắp diễn ra
+                                    <span className="status-dot" /> Scheduled
                                   </>
                                 )}
                               </span>
@@ -860,7 +859,7 @@ function App() {
                                 <button
                                   type="button"
                                   className="icon-button"
-                                  aria-label={`Sửa trận với ${match.opponent}`}
+                                  aria-label={`Edit match against ${match.opponent}`}
                                   onClick={() => openEditMatch(match)}
                                 >
                                   <Edit3 size={15} />
@@ -868,7 +867,7 @@ function App() {
                                 <button
                                   type="button"
                                   className="icon-button delete-action"
-                                  aria-label={`Xóa trận với ${match.opponent}`}
+                                  aria-label={`Delete match against ${match.opponent}`}
                                   onClick={() => void handleDelete(match)}
                                 >
                                   <Trash2 size={15} />
@@ -885,10 +884,10 @@ function App() {
             </div>
             <div className="table-caption">
               <span>
-                <span className="caption-dot" /> Tỷ số hiển thị theo góc nhìn
-                đội của bạn
+                <span className="caption-dot" /> Scores are shown from
+                your team's perspective
               </span>
-              <span>Cập nhật thủ công sau trận đấu</span>
+              <span>Updated manually after each match</span>
             </div>
           </section>
           <footer className="page-footer">
@@ -896,7 +895,7 @@ function App() {
               MY PITCH <span className="footer-separator">/</span> THE STORY IS
               YOURS
             </span>
-            <span>Ghi lại từng khoảnh khắc trên sân.</span>
+            <span>Capture every moment on the pitch.</span>
           </footer>
         </div>
       </main>
@@ -918,16 +917,16 @@ function App() {
             <div className="modal-heading">
               <div>
                 <div className="section-kicker">
-                  {editing ? "CẬP NHẬT THÔNG TIN" : "GHI LẠI MỘT DẤU MỐC"}
+                  {editing ? "UPDATE MATCH" : "CAPTURE A MILESTONE"}
                 </div>
                 <h2 id="modal-title">
-                  {editing ? "Chỉnh sửa trận đấu" : "Thêm trận đấu"}
+                  {editing ? "Edit match" : "Add match"}
                 </h2>
               </div>
               <button
                 type="button"
                 className="icon-button"
-                aria-label="Đóng"
+                aria-label="Close"
                 onClick={() => setModalOpen(false)}
               >
                 <X size={19} />
@@ -940,19 +939,19 @@ function App() {
               <div className="form-grid">
                 <label className="form-field form-full">
                   <span>
-                    Đối thủ <b>*</b>
+                    Opponent <b>*</b>
                   </span>
                   <input
                     name="opponent"
                     required
-                    placeholder="VD: FC Riverside"
+                    placeholder="e.g. FC Riverside"
                     defaultValue={editing?.opponent ?? ""}
                     autoFocus
                   />
                 </label>
                 <label className="form-field">
                   <span>
-                    Ngày thi đấu <b>*</b>
+                    Match date <b>*</b>
                   </span>
                   <input
                     name="date"
@@ -963,7 +962,7 @@ function App() {
                 </label>
                 <label className="form-field">
                   <span>
-                    Thời gian <b>*</b>
+                    Kickoff time <b>*</b>
                   </span>
                   <input
                     name="time"
@@ -973,25 +972,25 @@ function App() {
                   />
                 </label>
                 <label className="form-field">
-                  <span>Sân vận động</span>
+                  <span>Venue</span>
                   <input
                     name="venue"
-                    placeholder="Tên sân"
+                    placeholder="Venue name"
                     defaultValue={editing?.venue ?? ""}
                   />
                 </label>
                 <label className="form-field">
-                  <span>Giải đấu</span>
+                  <span>Competition</span>
                   <input
                     name="competition"
-                    placeholder="VD: Giải phong trào"
+                    placeholder="e.g. Local League"
                     defaultValue={editing?.competition ?? ""}
                   />
                 </label>
               </div>
               <div className="status-choice">
-                <span>Trạng thái trận đấu</span>
-                <div role="group" aria-label="Trạng thái trận đấu">
+                <span>Match status</span>
+                <div role="group" aria-label="Match status">
                   <button
                     type="button"
                     className={
@@ -999,23 +998,23 @@ function App() {
                     }
                     onClick={() => setFormStatus("scheduled")}
                   >
-                    <CalendarDays size={14} /> Sắp diễn ra
+                    <CalendarDays size={14} /> Scheduled
                   </button>
                   <button
                     type="button"
                     className={formStatus === "played" ? "choice-active" : ""}
                     onClick={() => setFormStatus("played")}
                   >
-                    <Check size={14} /> Đã kết thúc
+                    <Check size={14} /> Played
                   </button>
                 </div>
               </div>
               {formStatus === "played" && (
                 <div className="result-fields">
                   <div className="result-fields-title">
-                    <span>TỶ SỐ TRẬN ĐẤU</span>
+                    <span>MATCH SCORE</span>
                     <span>
-                      Đội của bạn <ArrowUpRight size={13} /> Đối thủ
+                      Your team <ArrowUpRight size={13} /> Opponent
                     </span>
                   </div>
                   <div className="score-inputs">
@@ -1025,7 +1024,7 @@ function App() {
                       min="0"
                       step="1"
                       required
-                      aria-label="Bàn thắng đội của bạn"
+                      aria-label="Your team score"
                       placeholder="0"
                       defaultValue={editing?.teamScore ?? ""}
                     />
@@ -1036,14 +1035,14 @@ function App() {
                       min="0"
                       step="1"
                       required
-                      aria-label="Bàn thắng đối thủ"
+                      aria-label="Opponent score"
                       placeholder="0"
                       defaultValue={editing?.opponentScore ?? ""}
                     />
                   </div>
                   <div className="form-grid personal-inputs">
                     <label className="form-field">
-                      <span>Bàn thắng cá nhân</span>
+                      <span>Goals</span>
                       <input
                         name="goals"
                         type="number"
@@ -1053,7 +1052,7 @@ function App() {
                       />
                     </label>
                     <label className="form-field">
-                      <span>Kiến tạo</span>
+                      <span>Assists</span>
                       <input
                         name="assists"
                         type="number"
@@ -1063,7 +1062,7 @@ function App() {
                       />
                     </label>
                     <label className="form-field form-full">
-                      <span>Số phút thi đấu</span>
+                      <span>Minutes played</span>
                       <input
                         name="minutes"
                         type="number"
@@ -1078,8 +1077,8 @@ function App() {
               )}
               {formStatus === "scheduled" && (
                 <div className="scheduled-hint">
-                  <Clock3 size={15} /> Sau trận đấu, chọn “Đã kết thúc” để cập
-                  nhật tỷ số và chỉ số cá nhân.
+                  <Clock3 size={15} /> After the match, choose “Played” to
+                  update the score and personal stats.
                 </div>
               )}
               <div className="modal-actions">
@@ -1088,7 +1087,7 @@ function App() {
                   className="button button-secondary"
                   onClick={() => setModalOpen(false)}
                 >
-                  Hủy
+                  Cancel
                 </button>
                 <button
                   type="submit"
@@ -1097,12 +1096,12 @@ function App() {
                 >
                   {saving ? (
                     <>
-                      <span className="button-spinner" /> Đang lưu...
+                      <span className="button-spinner" /> Saving...
                     </>
                   ) : (
                     <>
                       <Check size={16} />{" "}
-                      {editing ? "Lưu thay đổi" : "Lưu trận đấu"}
+                      {editing ? "Save changes" : "Save match"}
                     </>
                   )}
                 </button>

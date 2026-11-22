@@ -45,7 +45,7 @@ function isMatchRecord(value: unknown): value is MatchRecord {
 
 function parseMatches(value: unknown): MatchRecord[] {
   if (!Array.isArray(value) || !value.every(isMatchRecord)) {
-    throw new Error("Dữ liệu nhận được không đúng định dạng trận đấu.");
+    throw new Error("Received data is not in the expected match format.");
   }
   return value;
 }
@@ -66,7 +66,7 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
   });
   if (!response.ok) {
     throw new Error(
-      `MockAPI trả về lỗi ${response.status}. Kiểm tra URL, resource và quyền truy cập.`
+      `MockAPI returned an error (${response.status}). Check the URL, resource, and access permissions.`
     );
   }
   if (response.status === 204) return undefined as T;
@@ -74,7 +74,7 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
 }
 
 function apiUrl(id?: string) {
-  if (!mockApiUrl) throw new Error("Chưa cấu hình URL MockAPI.");
+  if (!mockApiUrl) throw new Error("MockAPI URL is not configured.");
   return id ? `${mockApiUrl.replace(/\/$/, "")}/${encodeURIComponent(id)}` : mockApiUrl;
 }
 
@@ -97,7 +97,7 @@ export async function saveMatch(draft: MatchDraft, id?: string): Promise<MatchRe
     body: JSON.stringify(draft),
   });
   if (!isMatchRecord(saved))
-    throw new Error("MockAPI đã lưu nhưng trả về dữ liệu không đúng định dạng.");
+    throw new Error("MockAPI saved the match but returned data in an unexpected format.");
   return saved;
 }
 

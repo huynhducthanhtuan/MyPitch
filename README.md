@@ -1,43 +1,43 @@
-# MyPitch — Nhật ký sân cỏ
+# MyPitch — Player Journal
 
-Ứng dụng frontend React + TypeScript + Vite để ghi lịch thi đấu, cập nhật kết quả và theo dõi bàn thắng, kiến tạo, số phút thi đấu theo năm/tháng.
+A React + TypeScript + Vite frontend for recording fixtures, updating results, and tracking goals, assists, and playing time by year and month.
 
-## Chạy ứng dụng
+## Run the application
 
 ```bash
 npm install
 npm run dev
 ```
 
-Khi chưa cấu hình MockAPI, ứng dụng chạy ở chế độ xem trước và lưu dữ liệu trong `localStorage` của trình duyệt hiện tại. Banner trên trang sẽ cho biết chế độ này.
+When MockAPI is not configured, the application runs in preview mode and stores data in the browser's `localStorage`. A banner on the page indicates this mode.
 
-## Kết nối MockAPI
+## Connect to MockAPI
 
-1. Tạo một project trên [MockAPI](https://mockapi.io/) và tạo resource tên `matches`.
-2. Tạo file `.env.local` ở thư mục gốc:
+1. Create a project on [MockAPI](https://mockapi.io/) and create a resource named `matches`.
+2. Create a `.env.local` file in the project root:
 
    ```env
    VITE_MOCKAPI_URL=https://<project-id>.mockapi.io/api/v1/matches
    ```
 
-3. Khởi động lại Vite sau khi thay đổi biến môi trường.
+3. Restart Vite after changing the environment variable.
 
-Ứng dụng gửi `GET` để đọc danh sách, `POST` để tạo, `PUT /matches/:id` để cập nhật và `DELETE /matches/:id` để xóa. Các trường của resource:
+The application sends `GET` to read the list, `POST` to create, `PUT /matches/:id` to update, and `DELETE /matches/:id` to delete records. Resource fields:
 
-| Trường                        | Kiểu             | Ý nghĩa                     |
+| Field                         | Type             | Description                 |
 | ----------------------------- | ---------------- | --------------------------- |
-| `opponent`                    | string           | Tên đối thủ                 |
-| `competition`                 | string           | Giải đấu                    |
-| `date`                        | string           | Ngày thi đấu (`YYYY-MM-DD`) |
-| `time`                        | string           | Giờ thi đấu (`HH:mm`)       |
-| `venue`                       | string           | Tên sân                     |
-| `status`                      | string           | `scheduled` hoặc `played`   |
-| `teamScore`, `opponentScore`  | number hoặc null | Tỷ số hai đội               |
-| `goals`, `assists`, `minutes` | number           | Chỉ số cá nhân              |
+| `opponent`                    | string           | Opponent name               |
+| `competition`                 | string           | Competition                 |
+| `date`                        | string           | Match date (`YYYY-MM-DD`)   |
+| `time`                        | string           | Match time (`HH:mm`)        |
+| `venue`                       | string           | Venue name                  |
+| `status`                      | string           | `scheduled` or `played`     |
+| `teamScore`, `opponentScore`  | number or null   | Team scores                 |
+| `goals`, `assists`, `minutes` | number           | Personal performance stats  |
 
-Tỷ lệ thắng/hòa/thua được tính từ tỷ số, tránh lưu trạng thái kết quả không khớp với bàn thắng hai đội. Chỉ số tổng hợp được lọc theo năm đã chọn; biểu đồ cho phép chọn tháng để lọc danh sách trận.
+Win/draw/loss rates are calculated from the score instead of storing a result state that could disagree with the two team scores. Aggregate stats are filtered by the selected year; the chart allows selecting a month to filter the match list.
 
-## Lệnh kiểm tra
+## Validation commands
 
 ```bash
 npm run lint
