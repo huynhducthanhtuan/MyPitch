@@ -265,6 +265,26 @@
   opacity: 0.65;
   cursor: wait;
 }
+.add-match-button:disabled {
+  cursor: pointer;
+  background: transparent;
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.button-primary:disabled:hover {
+  background: #a8dc57;
+  border-color: #a8dc57;
+  background: transparent;
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.button-secondary:disabled:hover {
+  background: #f6f8f4;
+  border-color: #cad4ca;
+  background: transparent;
+  cursor: not-allowed;
+  opacity: 0.55;
+}
 .button-primary {
   color: #1c3323;
   background: var(--green);

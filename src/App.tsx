@@ -492,7 +492,8 @@ function App() {
             </label>
             <button
               type="button"
-              className="button button-primary top-add"
+              className="button button-primary top-add add-match-button"
+              disabled
               onClick={openNewMatch}
             >
               <Plus size={17} /> Add match
@@ -782,7 +783,8 @@ function App() {
                 </label>
                 <button
                   type="button"
-                  className="button button-secondary"
+                  className="button button-secondary add-match-button"
+                  disabled
                   onClick={openNewMatch}
                 >
                   <Plus size={16} /> Add match
@@ -812,7 +814,8 @@ function App() {
                   {!query && selectedMonth === null && (
                     <button
                       type="button"
-                      className="button button-primary"
+                      className="button button-primary add-match-button"
+                      disabled
                       onClick={openNewMatch}
                     >
                       <Plus size={16} /> Add your first match
