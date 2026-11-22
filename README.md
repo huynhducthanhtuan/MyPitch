@@ -10,13 +10,13 @@ The website brings match history and performance statistics together in a clear 
 
 The dashboard highlights matches played, goals, assists, minutes, and the team's win-draw-loss record. Its chart makes it easy to compare goal totals across the season.
 
-![MyPitch season dashboard](./screenshots/dashboard.png)
+<img width="1912" height="826" alt="image" src="https://github.com/user-attachments/assets/654944e9-14c8-49dc-bf55-f79a82cf20de" />
 
 ### Match Journal
 
 The match journal keeps fixtures and results in one searchable list. Each match includes its date, opponent, venue, score, personal stats, and status.
 
-![MyPitch match journal](./screenshots/match-journal.png)
+<img width="1905" height="832" alt="image" src="https://github.com/user-attachments/assets/20a95b9b-cdff-4c1d-96f0-bf440b8c5005" />
 
 ## What You Can Track
 
