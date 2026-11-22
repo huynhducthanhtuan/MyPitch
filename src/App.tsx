@@ -126,6 +126,7 @@ function App() {
   const [query, setQuery] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<MatchRecord | null>(null);
+  const [selectedMatch, setSelectedMatch] = useState<MatchRecord | null>(null);
   const [formStatus, setFormStatus] = useState<MatchStatus>("scheduled");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
@@ -315,6 +316,12 @@ function App() {
       setError("Stats and scores must be non-negative integers.");
       return;
     }
+    if (editing && !editing.id) {
+      setError(
+        "This match has no ID and cannot be updated. Add an ID to the API record before editing it.",
+      );
+      return;
+    }
 
     setSaving(true);
     setError("");
@@ -322,7 +329,9 @@ function App() {
       const saved = await saveMatch(draft, editing?.id);
       setMatches((previous) =>
         editing
-          ? previous.map((match) => (match.id === saved.id ? saved : match))
+          ? previous.map((match) =>
+              match.id === editing.id ? saved : match,
+            )
           : [...previous, saved],
       );
       setModalOpen(false);
@@ -358,6 +367,10 @@ function App() {
     ? Math.round((stats.wins / stats.matches) * 100)
     : 0;
   const editingVenue = getVenueDetails(editing?.venue ?? "");
+  const selectedMatchVenue = selectedMatch
+    ? getVenueDetails(selectedMatch.venue)
+    : null;
+  const selectedMatchOutcome = selectedMatch ? outcomeOf(selectedMatch) : null;
 
   return (
     <div className="app-shell">
@@ -831,7 +844,19 @@ function App() {
                           .charAt(0)
                           .toLocaleUpperCase("en-US");
                         return (
-                          <tr key={match.id}>
+                          <tr
+                            key={match.id}
+                            className="match-row"
+                            tabIndex={0}
+                            onClick={() => setSelectedMatch(match)}
+                            onKeyDown={(event) => {
+                              if (event.target !== event.currentTarget) return;
+                              if (event.key === "Enter" || event.key === " ") {
+                                event.preventDefault();
+                                setSelectedMatch(match);
+                              }
+                            }}
+                          >
                             <td>
                               <div className="date-cell">
                                 <strong>{formatDate(match.date)}</strong>
@@ -875,6 +900,9 @@ function App() {
                                             href={venue.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
+                                            onClick={(event) =>
+                                              event.stopPropagation()
+                                            }
                                           >
                                             {venue.name}
                                           </a>
@@ -942,16 +970,24 @@ function App() {
                                 <button
                                   type="button"
                                   className="icon-button"
+                                  disabled
                                   aria-label={`Edit match against ${match.opponent}`}
-                                  onClick={() => openEditMatch(match)}
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    openEditMatch(match);
+                                  }}
                                 >
                                   <Edit3 size={15} />
                                 </button>
                                 <button
                                   type="button"
                                   className="icon-button delete-action"
+                                  disabled
                                   aria-label={`Delete match against ${match.opponent}`}
-                                  onClick={() => void handleDelete(match)}
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    void handleDelete(match);
+                                  }}
                                 >
                                   <Trash2 size={15} />
                                 </button>
@@ -965,26 +1001,162 @@ function App() {
                 </div>
               )}
             </div>
-            <div className="table-caption">
-              <span>
-                <span className="caption-dot" /> Scores are shown from
-                your team's perspective
-              </span>
-              <span>Updated manually after each match</span>
-            </div>
           </section>
           <footer className="page-footer">
-            <span>
+            <span className="footer-brand">
               MY PITCH <span className="footer-separator">/</span> THE STORY IS
               YOURS
             </span>
             <span className="footer-copyright">
               © {currentYear} @huynhducthanhtuan
             </span>
-            <span>Capture every moment on the pitch.</span>
+            <span>Updated manually after each match</span>
           </footer>
         </div>
       </main>
+
+      {selectedMatch && selectedMatchVenue && (
+        <div
+          className="modal-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setSelectedMatch(null);
+          }}
+        >
+          <section
+            className="match-modal detail-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Match details"
+            onKeyDown={(event) => {
+              if (event.key === "Escape") setSelectedMatch(null);
+            }}
+          >
+            <div className="modal-heading">
+              <div>
+                <div className="section-kicker">MATCH DETAILS</div>
+              </div>
+              <div className="detail-heading-actions">
+                <span className={`status-badge ${selectedMatch.status}`}>
+                  {selectedMatch.status === "played" ? "Played" : "Scheduled"}
+                </span>
+                <button
+                  type="button"
+                  className="icon-button"
+                  aria-label="Close match details"
+                  onClick={() => setSelectedMatch(null)}
+                >
+                  <X size={19} />
+                </button>
+              </div>
+            </div>
+
+            <div className="detail-info-grid">
+              <div className="detail-info-item">
+                <span>DATE</span>
+                <strong>
+                  {formatDate(selectedMatch.date, {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </strong>
+              </div>
+              <div className="detail-info-item">
+                <span>KICKOFF</span>
+                <strong>{selectedMatch.time}</strong>
+              </div>
+              <div className="detail-info-item">
+                <span>VENUE</span>
+                <strong>
+                  {!selectedMatchVenue.name
+                    ? "Not set"
+                    : selectedMatchVenue.url
+                      ? (
+                          <a
+                            href={selectedMatchVenue.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {selectedMatchVenue.name}
+                          </a>
+                        )
+                      : selectedMatchVenue.name}
+                </strong>
+              </div>
+              <div className="detail-info-item">
+                <span>COMPETITION</span>
+                <strong>{selectedMatch.competition || "Friendly"}</strong>
+              </div>
+            </div>
+
+            {selectedMatch.status === "played" && (
+              <>
+                <div className="detail-result-panel">
+                  <div className="detail-result-heading">
+                    <span>FINAL SCORE</span>
+                    <span
+                      className={`outcome-text ${selectedMatchOutcome ?? ""}`}
+                    >
+                      {selectedMatchOutcome === "win"
+                        ? "Win"
+                        : selectedMatchOutcome === "draw"
+                          ? "Draw"
+                          : "Loss"}
+                    </span>
+                  </div>
+                  <div className="detail-score-row">
+                    <span>My team</span>
+                    <strong className="team-score">
+                      {selectedMatch.teamScore}
+                    </strong>
+                    <span className="score-separator">-</span>
+                    <span className="opponent-score">
+                      {selectedMatch.opponentScore}
+                    </span>
+                    <span>Opponent team</span>
+                  </div>
+                </div>
+
+                <div className="detail-stats-grid">
+                  <div>
+                    <span>⚽ Goals</span>
+                    <strong>{selectedMatch.goals}</strong>
+                  </div>
+                  <div>
+                    <span>🎯 Assists</span>
+                    <strong>{selectedMatch.assists}</strong>
+                  </div>
+                  <div>
+                    <span>
+                      <Clock3 size={15} /> Minutes played
+                    </span>
+                    <strong>{selectedMatch.minutes}</strong>
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div className="detail-modal-actions">
+              <button
+                type="button"
+                className="button button-secondary"
+                onClick={() => setSelectedMatch(null)}
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="button button-primary"
+                disabled
+              >
+                <Edit3 size={15} /> Edit match
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
 
       {modalOpen && (
         <div

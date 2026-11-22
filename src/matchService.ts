@@ -24,11 +24,10 @@ export function getDataMode(): "local" | "mockapi" {
   return mockApiUrl ? "mockapi" : "local";
 }
 
-function isMatchRecord(value: unknown): value is MatchRecord {
+function hasMatchFields(value: unknown): value is Omit<MatchRecord, "id"> {
   if (!value || typeof value !== "object") return false;
   const match = value as Record<string, unknown>;
   return (
-    (match.id === undefined || typeof match.id === "string") &&
     typeof match.opponent === "string" &&
     typeof match.competition === "string" &&
     typeof match.date === "string" &&
@@ -43,6 +42,22 @@ function isMatchRecord(value: unknown): value is MatchRecord {
   );
 }
 
+function isMatchRecord(value: unknown): value is MatchRecord {
+  return (
+    hasMatchFields(value) &&
+    (!("id" in value) || typeof value.id === "string")
+  );
+}
+
+function isLocalMatchRecord(
+  value: unknown,
+): value is Omit<MatchRecord, "id"> & { id?: string } {
+  return (
+    hasMatchFields(value) &&
+    (!("id" in value) || typeof value.id === "string")
+  );
+}
+
 function parseMatches(value: unknown): MatchRecord[] {
   if (!Array.isArray(value) || !value.every(isMatchRecord)) {
     throw new Error("Received data is not in the expected match format.");
@@ -52,7 +67,20 @@ function parseMatches(value: unknown): MatchRecord[] {
 
 function readLocalMatches(): MatchRecord[] {
   const stored = window.localStorage.getItem(storageKey);
-  return stored ? parseMatches(JSON.parse(stored) as unknown) : [];
+  if (!stored) return [];
+
+  const parsed: unknown = JSON.parse(stored);
+  if (!Array.isArray(parsed) || !parsed.every(isLocalMatchRecord)) {
+    throw new Error("Received data is not in the expected match format.");
+  }
+
+  const needsMigration = parsed.some((match) => !match.id?.trim());
+  const matches: MatchRecord[] = parsed.map((match) => ({
+    ...match,
+    id: match.id?.trim() ? match.id : crypto.randomUUID(),
+  }));
+  if (needsMigration) writeLocalMatches(matches);
+  return matches;
 }
 
 function writeLocalMatches(matches: MatchRecord[]) {
@@ -86,10 +114,18 @@ export async function getMatches(): Promise<MatchRecord[]> {
 export async function saveMatch(draft: MatchDraft, id?: string): Promise<MatchRecord> {
   if (!mockApiUrl) {
     const matches = readLocalMatches();
-    const saved: MatchRecord = { ...draft, id: id ?? crypto.randomUUID() };
-    writeLocalMatches(
-      id ? matches.map((match) => (match.id === id ? saved : match)) : [...matches, saved]
-    );
+    if (id) {
+      const matchIndex = matches.findIndex((match) => match.id === id);
+      if (matchIndex === -1) throw new Error("The match to update was not found.");
+      const saved: MatchRecord = { ...draft, id };
+      writeLocalMatches(
+        matches.map((match) => (match.id === id ? saved : match)),
+      );
+      return saved;
+    }
+
+    const saved: MatchRecord = { ...draft, id: crypto.randomUUID() };
+    writeLocalMatches([...matches, saved]);
     return saved;
   }
   const saved = await request<unknown>(apiUrl(id), {
@@ -98,6 +134,8 @@ export async function saveMatch(draft: MatchDraft, id?: string): Promise<MatchRe
   });
   if (!isMatchRecord(saved))
     throw new Error("MockAPI saved the match but returned data in an unexpected format.");
+  if (id && saved.id !== id)
+    throw new Error("MockAPI returned a different match ID during the update.");
   return saved;
 }
 
