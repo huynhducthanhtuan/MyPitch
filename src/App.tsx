@@ -67,11 +67,7 @@ const monthNames = [
 type Outcome = "win" | "draw" | "loss";
 
 function outcomeOf(match: MatchRecord): Outcome | null {
-  if (
-    match.status !== "played" ||
-    match.teamScore === null ||
-    match.opponentScore === null
-  )
+  if (match.status !== "played" || match.teamScore === null || match.opponentScore === null)
     return null;
   if (match.teamScore > match.opponentScore) return "win";
   if (match.teamScore < match.opponentScore) return "loss";
@@ -80,11 +76,9 @@ function outcomeOf(match: MatchRecord): Outcome | null {
 
 function formatDate(
   date: string,
-  options: Intl.DateTimeFormatOptions = { day: "2-digit", month: "short" },
+  options: Intl.DateTimeFormatOptions = { day: "2-digit", month: "short" }
 ) {
-  return new Intl.DateTimeFormat("en-US", options).format(
-    new Date(`${date}T00:00:00`),
-  );
+  return new Intl.DateTimeFormat("en-US", options).format(new Date(`${date}T00:00:00`));
 }
 
 function getVenueDetails(venue: string): { name: string; url?: string } {
@@ -137,11 +131,7 @@ function App() {
     try {
       setMatches(await getMatches());
     } catch (loadError) {
-      setError(
-        loadError instanceof Error
-          ? loadError.message
-          : "Unable to load match data.",
-      );
+      setError(loadError instanceof Error ? loadError.message : "Unable to load match data.");
     } finally {
       setLoading(false);
     }
@@ -155,11 +145,7 @@ function App() {
       })
       .catch((loadError: unknown) => {
         if (active)
-          setError(
-            loadError instanceof Error
-              ? loadError.message
-              : "Unable to load match data.",
-          );
+          setError(loadError instanceof Error ? loadError.message : "Unable to load match data.");
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -170,15 +156,12 @@ function App() {
   }, []);
 
   const yearMatches = useMemo(
-    () =>
-      matches.filter(
-        (match) => new Date(`${match.date}T00:00:00`).getFullYear() === year,
-      ),
-    [matches, year],
+    () => matches.filter((match) => new Date(`${match.date}T00:00:00`).getFullYear() === year),
+    [matches, year]
   );
   const playedMatches = useMemo(
     () => yearMatches.filter((match) => match.status === "played"),
-    [yearMatches],
+    [yearMatches]
   );
   const stats = useMemo(() => {
     const result = emptyStats();
@@ -199,7 +182,7 @@ function App() {
     () =>
       monthLabels.map((_, month) => {
         const games = playedMatches.filter(
-          (match) => new Date(`${match.date}T00:00:00`).getMonth() === month,
+          (match) => new Date(`${match.date}T00:00:00`).getMonth() === month
         );
         return games.reduce((monthly, match) => {
           monthly.matches += 1;
@@ -212,41 +195,32 @@ function App() {
           return monthly;
         }, emptyStats());
       }),
-    [playedMatches],
+    [playedMatches]
   );
-  const maxMonthlyGoals = Math.max(
-    1,
-    ...monthlyStats.map((month) => month.goals),
-  );
-  const monthStats =
-    selectedMonth === null ? null : monthlyStats[selectedMonth];
+  const maxMonthlyGoals = Math.max(1, ...monthlyStats.map((month) => month.goals));
+  const monthStats = selectedMonth === null ? null : monthlyStats[selectedMonth];
   const visibleMatches = useMemo(() => {
     const term = query.trim().toLocaleLowerCase("en-US");
     return yearMatches
       .filter(
         (match) =>
-          selectedMonth === null ||
-          new Date(`${match.date}T00:00:00`).getMonth() === selectedMonth,
+          selectedMonth === null || new Date(`${match.date}T00:00:00`).getMonth() === selectedMonth
       )
       .filter(
         (match) =>
           !term ||
           `${match.opponent} ${match.venue} ${match.competition}`
             .toLocaleLowerCase("en-US")
-            .includes(term),
+            .includes(term)
       )
-      .sort(
-        (a, b) => b.date.localeCompare(a.date) || b.time.localeCompare(a.time),
-      );
+      .sort((a, b) => b.date.localeCompare(a.date) || b.time.localeCompare(a.time));
   }, [query, selectedMonth, yearMatches]);
 
   const years = Array.from(
     new Set([
       currentYear,
-      ...matches.map((match) =>
-        new Date(`${match.date}T00:00:00`).getFullYear(),
-      ),
-    ]),
+      ...matches.map((match) => new Date(`${match.date}T00:00:00`).getFullYear()),
+    ])
   ).sort((a, b) => b - a);
 
   const openNewMatch = () => {
@@ -270,11 +244,8 @@ function App() {
     };
     const teamScore = formData.get("teamScore");
     const opponentScore = formData.get("opponentScore");
-    const submittedVenue = getVenueDetails(
-      String(formData.get("venue") ?? "").trim(),
-    );
-    const venueUrl =
-      submittedVenue.url ?? String(formData.get("venueUrl") ?? "");
+    const submittedVenue = getVenueDetails(String(formData.get("venue") ?? "").trim());
+    const venueUrl = submittedVenue.url ?? String(formData.get("venueUrl") ?? "");
     const draft: MatchDraft = {
       opponent: String(formData.get("opponent") ?? "").trim(),
       competition: String(formData.get("competition") ?? "").trim(),
@@ -294,23 +265,14 @@ function App() {
 
     if (
       formStatus === "played" &&
-      (teamScore === "" ||
-        opponentScore === "" ||
-        teamScore === null ||
-        opponentScore === null)
+      (teamScore === "" || opponentScore === "" || teamScore === null || opponentScore === null)
     ) {
       setError("Please enter both team scores for a played match.");
       return;
     }
     if (
-      [
-        draft.goals,
-        draft.assists,
-        draft.minutes,
-        draft.teamScore,
-        draft.opponentScore,
-      ].some(
-        (value) => value !== null && (!Number.isInteger(value) || value < 0),
+      [draft.goals, draft.assists, draft.minutes, draft.teamScore, draft.opponentScore].some(
+        (value) => value !== null && (!Number.isInteger(value) || value < 0)
       )
     ) {
       setError("Stats and scores must be non-negative integers.");
@@ -318,7 +280,7 @@ function App() {
     }
     if (editing && !editing.id) {
       setError(
-        "This match has no ID and cannot be updated. Add an ID to the API record before editing it.",
+        "This match has no ID and cannot be updated. Add an ID to the API record before editing it."
       );
       return;
     }
@@ -329,47 +291,32 @@ function App() {
       const saved = await saveMatch(draft, editing?.id);
       setMatches((previous) =>
         editing
-          ? previous.map((match) =>
-              match.id === editing.id ? saved : match,
-            )
-          : [...previous, saved],
+          ? previous.map((match) => (match.id === editing.id ? saved : match))
+          : [...previous, saved]
       );
       setModalOpen(false);
       setEditing(null);
     } catch (saveError) {
-      setError(
-        saveError instanceof Error
-          ? saveError.message
-          : "Unable to save the match.",
-      );
+      setError(saveError instanceof Error ? saveError.message : "Unable to save the match.");
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (match: MatchRecord) => {
-    if (!match.id || !window.confirm(`Delete the match against ${match.opponent}?`))
-      return;
+    if (!match.id || !window.confirm(`Delete the match against ${match.opponent}?`)) return;
     setError("");
     try {
       await deleteMatch(match.id);
       setMatches((previous) => previous.filter((item) => item.id !== match.id));
     } catch (deleteError) {
-      setError(
-        deleteError instanceof Error
-          ? deleteError.message
-          : "Unable to delete the match.",
-      );
+      setError(deleteError instanceof Error ? deleteError.message : "Unable to delete the match.");
     }
   };
 
-  const winRate = stats.matches
-    ? Math.round((stats.wins / stats.matches) * 100)
-    : 0;
+  const winRate = stats.matches ? Math.round((stats.wins / stats.matches) * 100) : 0;
   const editingVenue = getVenueDetails(editing?.venue ?? "");
-  const selectedMatchVenue = selectedMatch
-    ? getVenueDetails(selectedMatch.venue)
-    : null;
+  const selectedMatchVenue = selectedMatch ? getVenueDetails(selectedMatch.venue) : null;
   const selectedMatchOutcome = selectedMatch ? outcomeOf(selectedMatch) : null;
 
   return (
@@ -515,11 +462,7 @@ function App() {
             <div className="error-banner" role="alert">
               <CircleHelp size={18} />
               <span>{error}</span>
-              <button
-                type="button"
-                className="text-button"
-                onClick={() => void loadMatches()}
-              >
+              <button type="button" className="text-button" onClick={() => void loadMatches()}>
                 Retry
               </button>
               <button
@@ -542,8 +485,7 @@ function App() {
                 Your <em>journey.</em>
               </h1>
               <p className="welcome-subtitle">
-                Every match is a milestone. Look back at your performance
-                this season.
+                Every match is a milestone. Look back at your performance this season.
               </p>
             </div>
             <div className="welcome-note">
@@ -587,10 +529,7 @@ function App() {
               </div>
               <div className="metric-foot">
                 <span className="metric-highlight">
-                  Average{" "}
-                  {stats.matches
-                    ? (stats.goals / stats.matches).toFixed(1)
-                    : "0.0"}
+                  Average {stats.matches ? (stats.goals / stats.matches).toFixed(1) : "0.0"}
                 </span>{" "}
                 goals / match
               </div>
@@ -609,10 +548,8 @@ function App() {
                 <span className="metric-unit">assists</span>
               </div>
               <div className="metric-foot">
-                <span className="metric-highlight">
-                  {stats.assists + stats.goals}
-                </span>{" "}
-                goal contributions
+                <span className="metric-highlight">{stats.assists + stats.goals}</span> goal
+                contributions
               </div>
             </article>
             <article className="metric-card">
@@ -628,9 +565,7 @@ function App() {
               </div>
               <div className="metric-foot">
                 <span className="metric-highlight">
-                  {stats.matches
-                    ? Math.round(stats.minutes / stats.matches)
-                    : 0}
+                  {stats.matches ? Math.round(stats.minutes / stats.matches) : 0}
                 </span>{" "}
                 minutes / match
               </div>
@@ -659,20 +594,14 @@ function App() {
                 </div>
                 <div className="summary-separator" />
                 <div>
-                  <strong>
-                    {monthStats ? monthStats.matches : stats.matches}
-                  </strong>
+                  <strong>{monthStats ? monthStats.matches : stats.matches}</strong>
                   <span>MATCHES PLAYED</span>
                 </div>
                 <div className="chart-legend">
                   <span /> Goals
                 </div>
               </div>
-              <div
-                className="bar-chart"
-                role="group"
-                aria-label="Goals by month"
-              >
+              <div className="bar-chart" role="group" aria-label="Goals by month">
                 {monthlyStats.map((month, index) => {
                   const height = month.goals
                     ? Math.max(12, (month.goals / maxMonthlyGoals) * 100)
@@ -682,20 +611,13 @@ function App() {
                       type="button"
                       key={monthLabels[index]}
                       className={`chart-column ${selectedMonth === index ? "chart-selected" : ""}`}
-                      onClick={() =>
-                        setSelectedMonth(selectedMonth === index ? null : index)
-                      }
+                      onClick={() => setSelectedMonth(selectedMonth === index ? null : index)}
                       aria-label={`${monthNames[index]}: ${month.goals} goals, ${month.matches} matches`}
                       aria-pressed={selectedMonth === index}
                     >
                       <span className="bar-count">{month.goals || ""}</span>
-                      <span
-                        className={`bar-track ${month.goals ? "" : "bar-empty"}`}
-                      >
-                        <span
-                          className="bar-fill"
-                          style={{ height: `${height}%` }}
-                        />
+                      <span className={`bar-track ${month.goals ? "" : "bar-empty"}`}>
+                        <span className="bar-fill" style={{ height: `${height}%` }} />
                       </span>
                       <span className="bar-label">{monthLabels[index]}</span>
                     </button>
@@ -704,8 +626,7 @@ function App() {
               </div>
               <div className="chart-footnote">
                 <span>
-                  <span className="footnote-dot" /> Months with matches are
-                  recorded automatically
+                  <span className="footnote-dot" /> Months with matches are recorded automatically
                 </span>
                 <span>{year}</span>
               </div>
@@ -751,8 +672,7 @@ function App() {
                 <span>
                   {stats.matches ? (
                     <>
-                      You appeared in{" "}
-                      <strong>{stats.matches} matches</strong> this season.
+                      You appeared in <strong>{stats.matches} matches</strong> this season.
                     </>
                   ) : (
                     <>Start by recording your first match.</>
@@ -767,8 +687,7 @@ function App() {
               <div>
                 <div className="section-kicker">MATCH JOURNAL</div>
                 <h2>
-                  Fixtures & results{" "}
-                  <span className="match-count">{visibleMatches.length}</span>
+                  Fixtures & results <span className="match-count">{visibleMatches.length}</span>
                 </h2>
               </div>
               <div className="match-tools">
@@ -802,9 +721,7 @@ function App() {
                     <CalendarDays size={22} />
                   </div>
                   <strong>
-                    {query || selectedMonth !== null
-                      ? "No matches found"
-                      : "No matches yet"}
+                    {query || selectedMonth !== null ? "No matches found" : "No matches yet"}
                   </strong>
                   <span>
                     {query || selectedMonth !== null
@@ -895,35 +812,29 @@ function App() {
                               <div className="venue-cell">
                                 <MapPin size={14} />
                                 <span>
-                                  {!venue.name
-                                    ? "Not set"
-                                    : venue.url
-                                      ? (
-                                          <a
-                                            href={venue.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            onClick={(event) =>
-                                              event.stopPropagation()
-                                            }
-                                          >
-                                            {venue.name}
-                                          </a>
-                                        )
-                                      : venue.name}
+                                  {!venue.name ? (
+                                    "Not set"
+                                  ) : venue.url ? (
+                                    <a
+                                      href={venue.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      onClick={(event) => event.stopPropagation()}
+                                    >
+                                      {venue.name}
+                                    </a>
+                                  ) : (
+                                    venue.name
+                                  )}
                                 </span>
                               </div>
                             </td>
                             <td>
                               {match.status === "played" ? (
                                 <div className="score-cell">
-                                  <strong className="team-score">
-                                    {match.teamScore}
-                                  </strong>
+                                  <strong className="team-score">{match.teamScore}</strong>
                                   <span className="score-separator">-</span>
-                                  <span className="opponent-score">
-                                    {match.opponentScore}
-                                  </span>
+                                  <span className="opponent-score">{match.opponentScore}</span>
                                   <span className={`outcome-text ${outcome}`}>
                                     {outcome === "win"
                                       ? "Win"
@@ -1007,13 +918,9 @@ function App() {
           </section>
           <footer className="page-footer">
             <span className="footer-brand">
-              MY PITCH <span className="footer-separator">/</span> THE STORY IS
-              YOURS
+              MY PITCH <span className="footer-separator">/</span> THE STORY IS YOURS
             </span>
-            <span className="footer-copyright">
-              © {currentYear} @huynhducthanhtuan
-            </span>
-            <span>Updated manually after each match</span>
+            <span className="footer-copyright">© {currentYear} @huynhducthanhtuan</span>
           </footer>
         </div>
       </main>
@@ -1073,19 +980,15 @@ function App() {
               <div className="detail-info-item">
                 <span>VENUE</span>
                 <strong>
-                  {!selectedMatchVenue.name
-                    ? "Not set"
-                    : selectedMatchVenue.url
-                      ? (
-                          <a
-                            href={selectedMatchVenue.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {selectedMatchVenue.name}
-                          </a>
-                        )
-                      : selectedMatchVenue.name}
+                  {!selectedMatchVenue.name ? (
+                    "Not set"
+                  ) : selectedMatchVenue.url ? (
+                    <a href={selectedMatchVenue.url} target="_blank" rel="noopener noreferrer">
+                      {selectedMatchVenue.name}
+                    </a>
+                  ) : (
+                    selectedMatchVenue.name
+                  )}
                 </strong>
               </div>
               <div className="detail-info-item">
@@ -1099,9 +1002,7 @@ function App() {
                 <div className="detail-result-panel">
                   <div className="detail-result-heading">
                     <span>FINAL SCORE</span>
-                    <span
-                      className={`outcome-text ${selectedMatchOutcome ?? ""}`}
-                    >
+                    <span className={`outcome-text ${selectedMatchOutcome ?? ""}`}>
                       {selectedMatchOutcome === "win"
                         ? "Win"
                         : selectedMatchOutcome === "draw"
@@ -1111,13 +1012,9 @@ function App() {
                   </div>
                   <div className="detail-score-row">
                     <span>My team</span>
-                    <strong className="team-score">
-                      {selectedMatch.teamScore}
-                    </strong>
+                    <strong className="team-score">{selectedMatch.teamScore}</strong>
                     <span className="score-separator">-</span>
-                    <span className="opponent-score">
-                      {selectedMatch.opponentScore}
-                    </span>
+                    <span className="opponent-score">{selectedMatch.opponentScore}</span>
                     <span>Opponent team</span>
                   </div>
                 </div>
@@ -1149,11 +1046,7 @@ function App() {
               >
                 Close
               </button>
-              <button
-                type="button"
-                className="button button-primary"
-                disabled
-              >
+              <button type="button" className="button button-primary" disabled>
                 <Edit3 size={15} /> Edit match
               </button>
             </div>
@@ -1180,9 +1073,7 @@ function App() {
                 <div className="section-kicker">
                   {editing ? "UPDATE MATCH" : "CAPTURE A MILESTONE"}
                 </div>
-                <h2 id="modal-title">
-                  {editing ? "Edit match" : "Add match"}
-                </h2>
+                <h2 id="modal-title">{editing ? "Edit match" : "Add match"}</h2>
               </div>
               <button
                 type="button"
@@ -1193,10 +1084,7 @@ function App() {
                 <X size={19} />
               </button>
             </div>
-            <form
-              key={editing?.id ?? "new-match"}
-              onSubmit={(event) => void handleSave(event)}
-            >
+            <form key={editing?.id ?? "new-match"} onSubmit={(event) => void handleSave(event)}>
               <div className="form-grid">
                 <label className="form-field form-full">
                   <span>
@@ -1214,37 +1102,18 @@ function App() {
                   <span>
                     Match date <b>*</b>
                   </span>
-                  <input
-                    name="date"
-                    type="date"
-                    required
-                    defaultValue={editing?.date ?? today}
-                  />
+                  <input name="date" type="date" required defaultValue={editing?.date ?? today} />
                 </label>
                 <label className="form-field">
                   <span>
                     Kickoff time <b>*</b>
                   </span>
-                  <input
-                    name="time"
-                    type="time"
-                    required
-                    defaultValue={editing?.time ?? "18:00"}
-                  />
+                  <input name="time" type="time" required defaultValue={editing?.time ?? "18:00"} />
                 </label>
                 <label className="form-field">
                   <span>Venue</span>
-                  <input
-                    name="venue"
-                    placeholder="Venue name"
-                    defaultValue={editingVenue.name}
-                  />
-                  <input
-                    type="hidden"
-                    name="venueUrl"
-                    value={editingVenue.url ?? ""}
-                    readOnly
-                  />
+                  <input name="venue" placeholder="Venue name" defaultValue={editingVenue.name} />
+                  <input type="hidden" name="venueUrl" value={editingVenue.url ?? ""} readOnly />
                 </label>
                 <label className="form-field">
                   <span>Competition</span>
@@ -1260,9 +1129,7 @@ function App() {
                 <div role="group" aria-label="Match status">
                   <button
                     type="button"
-                    className={
-                      formStatus === "scheduled" ? "choice-active" : ""
-                    }
+                    className={formStatus === "scheduled" ? "choice-active" : ""}
                     onClick={() => setFormStatus("scheduled")}
                   >
                     <CalendarDays size={14} /> Scheduled
@@ -1344,8 +1211,8 @@ function App() {
               )}
               {formStatus === "scheduled" && (
                 <div className="scheduled-hint">
-                  <Clock3 size={15} /> After the match, choose “Played” to
-                  update the score and personal stats.
+                  <Clock3 size={15} /> After the match, choose “Played” to update the score and
+                  personal stats.
                 </div>
               )}
               <div className="modal-actions">
@@ -1356,19 +1223,14 @@ function App() {
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="button button-primary"
-                  disabled={saving}
-                >
+                <button type="submit" className="button button-primary" disabled={saving}>
                   {saving ? (
                     <>
                       <span className="button-spinner" /> Saving...
                     </>
                   ) : (
                     <>
-                      <Check size={16} />{" "}
-                      {editing ? "Save changes" : "Save match"}
+                      <Check size={16} /> {editing ? "Save changes" : "Save match"}
                     </>
                   )}
                 </button>

@@ -43,19 +43,11 @@ function hasMatchFields(value: unknown): value is Omit<MatchRecord, "id"> {
 }
 
 function isMatchRecord(value: unknown): value is MatchRecord {
-  return (
-    hasMatchFields(value) &&
-    (!("id" in value) || typeof value.id === "string")
-  );
+  return hasMatchFields(value) && (!("id" in value) || typeof value.id === "string");
 }
 
-function isLocalMatchRecord(
-  value: unknown,
-): value is Omit<MatchRecord, "id"> & { id?: string } {
-  return (
-    hasMatchFields(value) &&
-    (!("id" in value) || typeof value.id === "string")
-  );
+function isLocalMatchRecord(value: unknown): value is Omit<MatchRecord, "id"> & { id?: string } {
+  return hasMatchFields(value) && (!("id" in value) || typeof value.id === "string");
 }
 
 function parseMatches(value: unknown): MatchRecord[] {
@@ -118,9 +110,7 @@ export async function saveMatch(draft: MatchDraft, id?: string): Promise<MatchRe
       const matchIndex = matches.findIndex((match) => match.id === id);
       if (matchIndex === -1) throw new Error("The match to update was not found.");
       const saved: MatchRecord = { ...draft, id };
-      writeLocalMatches(
-        matches.map((match) => (match.id === id ? saved : match)),
-      );
+      writeLocalMatches(matches.map((match) => (match.id === id ? saved : match)));
       return saved;
     }
 
