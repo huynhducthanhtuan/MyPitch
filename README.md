@@ -1,45 +1,27 @@
 # MyPitch — Player Journal
 
-A React + TypeScript + Vite frontend for recording fixtures, updating results, and tracking goals, assists, and playing time by year and month.
+MyPitch is a personal football journal that helps players keep their season in one place. Record upcoming fixtures, add results after a match, and follow your goals, assists, and playing time as the season unfolds.
 
-## Run the application
+The website brings match history and performance statistics together in a clear dashboard, with a month-by-month view for looking back at progress throughout the year.
 
-```bash
-npm install
-npm run dev
-```
+## Website Preview
 
-When MockAPI is not configured, the application runs in preview mode and stores data in the browser's `localStorage`. A banner on the page indicates this mode.
+### Season Dashboard
 
-## Connect to MockAPI
+The dashboard highlights matches played, goals, assists, minutes, and the team's win-draw-loss record. Its chart makes it easy to compare goal totals across the season.
 
-1. Create a project on [MockAPI](https://mockapi.io/) and create a resource named `matches`.
-2. Create a `.env.local` file in the project root:
+![MyPitch season dashboard](./screenshots/dashboard.png)
 
-   ```env
-   VITE_MOCKAPI_URL=https://<project-id>.mockapi.io/api/v1/matches
-   ```
+### Match Journal
 
-3. Restart Vite after changing the environment variable.
+The match journal keeps fixtures and results in one searchable list. Each match includes its date, opponent, venue, score, personal stats, and status.
 
-The application sends `GET` to read the list, `POST` to create, `PUT /matches/:id` to update, and `DELETE /matches/:id` to delete records. Resource fields:
+![MyPitch match journal](./screenshots/match-journal.png)
 
-| Field                         | Type           | Description                |
-| ----------------------------- | -------------- | -------------------------- |
-| `opponent`                    | string         | Opponent name              |
-| `competition`                 | string         | Competition                |
-| `date`                        | string         | Match date (`YYYY-MM-DD`)  |
-| `time`                        | string         | Match time (`HH:mm`)       |
-| `venue`                       | string         | Venue name                 |
-| `status`                      | string         | `scheduled` or `played`    |
-| `teamScore`, `opponentScore`  | number or null | Team scores                |
-| `goals`, `assists`, `minutes` | number         | Personal performance stats |
+## What You Can Track
 
-Win/draw/loss rates are calculated from the score instead of storing a result state that could disagree with the two team scores. Aggregate stats are filtered by the selected year; the chart allows selecting a month to filter the match list.
-
-## Validation commands
-
-```bash
-npm run lint
-npm run build
-```
+- Upcoming and completed matches, including kickoff time, venue, and competition.
+- Match scores and outcomes from your team's perspective.
+- Goals, assists, and minutes played for each completed match.
+- Yearly summaries and monthly goal trends.
+- Searchable match history, with a details view for each fixture.
