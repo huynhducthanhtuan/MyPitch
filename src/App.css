@@ -161,12 +161,12 @@
 }
 .profile-copy strong {
   color: #ecf1eb;
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 600;
 }
 .profile-copy span {
   color: #87958a;
-  font-size: 9px;
+  font-size: 11px;
 }
 .icon-button {
   display: inline-grid;
@@ -209,7 +209,7 @@
   align-items: center;
   gap: 11px;
   color: #929b95;
-  font-size: 11px;
+  font-size: 14px;
 }
 .breadcrumbs strong {
   color: #334138;
@@ -384,19 +384,19 @@ h1 em {
 .welcome-subtitle {
   margin-top: 7px;
   color: #818b84;
-  font-size: 11px;
+  font-size: 16px;
 }
 .welcome-note {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   margin-bottom: 4px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   color: #82906d;
   background: #f0f4e9;
   border-radius: 8px;
-  font-size: 9px;
-  line-height: 1.55;
+  font-size: 14px;
+  line-height: 1.4;
 }
 .welcome-note svg {
   color: #93bb59;
@@ -427,7 +427,7 @@ h1 em {
   align-items: center;
   justify-content: space-between;
   color: #89938c;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.9px;
 }
@@ -452,6 +452,10 @@ h1 em {
   color: #6984a0;
   background: #edf2f7;
 }
+.metric-emoji {
+  font-size: 18px;
+  line-height: 1;
+}
 .metric-value {
   margin-top: 9px;
   color: #1b2b21;
@@ -465,7 +469,7 @@ h1 em {
   margin-left: 5px;
   color: #8e9890;
   font-family: "DM Sans", sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: 0;
 }
@@ -475,7 +479,7 @@ h1 em {
   gap: 5px;
   margin-top: 8px;
   color: #929a94;
-  font-size: 9px;
+  font-size: 12px;
 }
 .metric-dot {
   width: 6px;
@@ -514,12 +518,12 @@ h1 em {
   margin-top: 5px;
   color: #24352b;
   font-family: Manrope, sans-serif;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.35px;
 }
 .section-kicker {
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 1.1px;
 }
 .select-pill {
@@ -531,7 +535,7 @@ h1 em {
   background: #fff;
   border: 1px solid #e9ece7;
   border-radius: 6px;
-  font-size: 9px;
+  font-size: 12px;
 }
 .select-pill.selected {
   color: #49584c;
@@ -554,7 +558,7 @@ h1 em {
 }
 .chart-summary div > span {
   color: #9aa39c;
-  font-size: 7px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.65px;
 }
@@ -568,7 +572,7 @@ h1 em {
   gap: 6px;
   margin-left: auto;
   color: #879189;
-  font-size: 8px;
+  font-size: 12px;
 }
 .chart-legend > span {
   width: 7px;
@@ -599,7 +603,7 @@ h1 em {
 .bar-count {
   height: 10px;
   color: #728c55;
-  font-size: 8px;
+  font-size: 12px;
   font-weight: 600;
 }
 .bar-track {
@@ -634,7 +638,7 @@ h1 em {
 .bar-label {
   margin-bottom: -17px;
   color: #98a19a;
-  font-size: 8px;
+  font-size: 12px;
 }
 .chart-column.chart-selected .bar-label {
   color: #4a6d35;
@@ -645,7 +649,7 @@ h1 em {
   justify-content: space-between;
   margin-top: 20px;
   color: #9aa39d;
-  font-size: 8px;
+  font-size: 12px;
 }
 .chart-footnote > span:first-child {
   display: flex;
@@ -667,7 +671,7 @@ h1 em {
   color: #82956f;
   background: #f1f5ec;
   border-radius: 5px;
-  font-size: 8px;
+  font-size: 12px;
   font-weight: 700;
 }
 .record-score {
@@ -692,7 +696,7 @@ h1 em {
 }
 .record-score span {
   color: #8c958e;
-  font-size: 8px;
+  font-size: 12px;
 }
 .win-stat strong {
   color: #63933d;
@@ -715,14 +719,14 @@ h1 em {
   align-items: center;
   justify-content: space-between;
   color: #8a948d;
-  font-size: 8px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.65px;
 }
 .winrate-label strong {
   color: #496d35;
   font-family: Manrope, sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0;
 }
 .winrate-track {
@@ -748,7 +752,7 @@ h1 em {
   padding-top: 12px;
   color: #7d887f;
   border-top: 1px solid #edf0ec;
-  font-size: 8px;
+  font-size: 12px;
 }
 .record-message strong {
   color: #536e42;
@@ -800,8 +804,8 @@ h1 em {
 }
 .search-field {
   display: flex;
-  width: 200px;
-  height: 35px;
+  width: 240px;
+  height: 40px;
   align-items: center;
   gap: 7px;
   padding: 0 9px;
@@ -817,7 +821,7 @@ h1 em {
   background: transparent;
   border: 0;
   outline: 0;
-  font-size: 9px;
+  font-size: 12px;
 }
 .search-field input::placeholder {
   color: #a5ada7;
@@ -842,20 +846,20 @@ thead {
   background: #fafbf9;
 }
 th {
-  height: 36px;
+  height: 40px;
   padding: 0 13px;
   color: #99a29b;
-  font-size: 7px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.82px;
+  letter-spacing: 0.7px;
   white-space: nowrap;
 }
 td {
-  height: 61px;
+  height: 68px;
   padding: 0 13px;
   color: #56635a;
   border-top: 1px solid #f0f2ef;
-  font-size: 9px;
+  font-size: 12px;
   white-space: nowrap;
 }
 tbody tr {
@@ -877,26 +881,43 @@ tbody tr:hover {
 }
 .date-cell strong {
   color: #425047;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 600;
 }
 .date-cell span,
 .opponent-cell div span {
   color: #9aa39c;
-  font-size: 8px;
+  font-size: 12px;
 }
 .opponent-badge {
   display: grid;
-  width: 27px;
-  height: 27px;
+  width: 31px;
+  height: 31px;
   flex: 0 0 auto;
   place-items: center;
   color: #607850;
   background: #eff4e9;
   border-radius: 8px;
   font-family: Manrope, sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
+}
+.opponent-badge-blue {
+  color: #fff;
+  background: #0060a7;
+}
+.opponent-badge-red {
+  color: #fff;
+  background: #ba1a1a;
+}
+.opponent-badge-logo {
+  background: transparent;
+}
+.opponent-badge-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .opponent-cell div {
   display: grid;
@@ -904,7 +925,7 @@ tbody tr:hover {
 }
 .opponent-cell div strong {
   color: #334238;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 600;
 }
 .venue-cell {
@@ -916,16 +937,39 @@ tbody tr:hover {
 .venue-cell svg {
   color: #a1ab9f;
 }
-.score-cell {
-  gap: 8px;
+.venue-cell a {
+  color: inherit;
+  text-decoration-color: #c5cec6;
+  text-underline-offset: 2px;
 }
-.score-cell > strong {
+.venue-cell a:hover {
+  color: #0060a7;
+}
+.venue-cell a:focus-visible {
+  border-radius: 2px;
+  outline: 2px solid #0060a7;
+  outline-offset: 2px;
+}
+.score-cell {
+  gap: 5px;
+}
+.score-cell .team-score {
   color: #304237;
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 800;
+}
+.score-cell .score-separator {
+  color: #8c958e;
+  font-size: 13px;
+  font-weight: 500;
+}
+.score-cell .opponent-score {
+  color: #8c958e;
+  font-size: 15px;
+  font-weight: 500;
 }
 .outcome-text {
-  font-size: 8px;
+  font-size: 12px;
   font-weight: 600;
 }
 .outcome-text.win {
@@ -951,11 +995,9 @@ tbody tr:hover {
   align-items: center;
   gap: 3px;
 }
-.personal-stats span:first-child svg {
-  color: #87a958;
-}
-.personal-stats span:nth-child(2) svg {
-  color: #bf9c5e;
+.stats-emoji {
+  font-size: 14px;
+  line-height: 1;
 }
 .personal-stats span:last-child svg {
   color: #92a6b0;
@@ -964,9 +1006,9 @@ tbody tr:hover {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 7px;
+  padding: 6px 9px;
   border-radius: 5px;
-  font-size: 8px;
+  font-size: 12px;
   font-weight: 600;
 }
 .status-badge.played {
@@ -1050,8 +1092,8 @@ tbody tr:hover {
   display: flex;
   justify-content: space-between;
   margin-top: 9px;
-  color: #9ca59e;
-  font-size: 8px;
+  color: #758078;
+  font-size: 14px;
 }
 .table-caption > span:first-child {
   display: flex;
@@ -1067,13 +1109,13 @@ tbody tr:hover {
   justify-content: space-between;
   margin-top: 31px;
   padding: 13px 0 4px;
-  color: #a0a9a2;
+  color: #758078;
   border-top: 1px solid #e9ece7;
-  font-size: 8px;
+  font-size: 14px;
 }
 .page-footer > span:first-child {
   color: #7a8a7c;
-  font-size: 7px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 1px;
 }
@@ -1421,7 +1463,7 @@ tbody tr:hover {
     gap: 7px;
     margin-right: auto;
     margin-left: 5px;
-    font-size: 9px;
+    font-size: 12px;
   }
   .breadcrumbs > span:first-child {
     display: none;
@@ -1469,7 +1511,7 @@ tbody tr:hover {
   }
   .welcome-subtitle {
     max-width: 310px;
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.6;
   }
   .welcome-note {
@@ -1483,7 +1525,7 @@ tbody tr:hover {
     padding: 12px 11px 10px;
   }
   .metric-top {
-    font-size: 7px;
+    font-size: 10px;
     letter-spacing: 0.6px;
   }
   .metric-icon {
@@ -1494,7 +1536,7 @@ tbody tr:hover {
     font-size: 24px;
   }
   .metric-foot {
-    font-size: 8px;
+    font-size: 12px;
   }
   .dashboard-grid {
     gap: 10px;
@@ -1505,7 +1547,7 @@ tbody tr:hover {
     padding: 14px 12px 12px;
   }
   .panel-heading h2 {
-    font-size: 14px;
+    font-size: 16px;
   }
   .bar-chart {
     gap: 3px;
@@ -1514,7 +1556,7 @@ tbody tr:hover {
     width: min(16px, 80%);
   }
   .chart-footnote {
-    font-size: 7px;
+    font-size: 12px;
   }
   .matches-section {
     margin-top: 24px;
@@ -1525,7 +1567,7 @@ tbody tr:hover {
     gap: 10px;
   }
   .matches-heading h2 {
-    font-size: 14px;
+    font-size: 16px;
   }
   .match-tools {
     width: 100%;
@@ -1536,11 +1578,14 @@ tbody tr:hover {
   }
   .table-caption {
     gap: 10px;
-    font-size: 7px;
+    font-size: 13px;
   }
   .page-footer {
     gap: 10px;
-    font-size: 7px;
+    font-size: 12px;
+  }
+  .page-footer > span:first-child {
+    font-size: 10px;
   }
   .page-footer > span:last-child {
     text-align: right;

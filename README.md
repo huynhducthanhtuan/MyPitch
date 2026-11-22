@@ -24,16 +24,16 @@ When MockAPI is not configured, the application runs in preview mode and stores 
 
 The application sends `GET` to read the list, `POST` to create, `PUT /matches/:id` to update, and `DELETE /matches/:id` to delete records. Resource fields:
 
-| Field                         | Type             | Description                 |
-| ----------------------------- | ---------------- | --------------------------- |
-| `opponent`                    | string           | Opponent name               |
-| `competition`                 | string           | Competition                 |
-| `date`                        | string           | Match date (`YYYY-MM-DD`)   |
-| `time`                        | string           | Match time (`HH:mm`)        |
-| `venue`                       | string           | Venue name                  |
-| `status`                      | string           | `scheduled` or `played`     |
-| `teamScore`, `opponentScore`  | number or null   | Team scores                 |
-| `goals`, `assists`, `minutes` | number           | Personal performance stats  |
+| Field                         | Type           | Description                |
+| ----------------------------- | -------------- | -------------------------- |
+| `opponent`                    | string         | Opponent name              |
+| `competition`                 | string         | Competition                |
+| `date`                        | string         | Match date (`YYYY-MM-DD`)  |
+| `time`                        | string         | Match time (`HH:mm`)       |
+| `venue`                       | string         | Venue name                 |
+| `status`                      | string         | `scheduled` or `played`    |
+| `teamScore`, `opponentScore`  | number or null | Team scores                |
+| `goals`, `assists`, `minutes` | number         | Personal performance stats |
 
 Win/draw/loss rates are calculated from the score instead of storing a result state that could disagree with the two team scores. Aggregate stats are filtered by the selected year; the chart allows selecting a month to filter the match list.
 

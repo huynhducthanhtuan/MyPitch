@@ -8,7 +8,6 @@ import {
   CircleHelp,
   Clock3,
   Edit3,
-  Goal,
   MapPin,
   Menu,
   Plus,
@@ -88,6 +87,23 @@ function formatDate(
   );
 }
 
+function getVenueDetails(venue: string): { name: string; url?: string } {
+  const match = venue.match(/^(.*?)\s*\((https?:\/\/[^)]+)\)\s*$/i);
+  if (!match) return { name: venue };
+
+  const name = match[1].trim();
+  if (!name) return { name: venue };
+
+  try {
+    const url = new URL(match[2].trim());
+    return url.protocol === "http:" || url.protocol === "https:"
+      ? { name, url: url.href }
+      : { name: venue };
+  } catch {
+    return { name: venue };
+  }
+}
+
 function emptyStats() {
   return {
     matches: 0,
@@ -112,6 +128,7 @@ function App() {
   const [editing, setEditing] = useState<MatchRecord | null>(null);
   const [formStatus, setFormStatus] = useState<MatchStatus>("scheduled");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("overview");
 
   const loadMatches = async () => {
     setLoading(true);
@@ -252,12 +269,20 @@ function App() {
     };
     const teamScore = formData.get("teamScore");
     const opponentScore = formData.get("opponentScore");
+    const submittedVenue = getVenueDetails(
+      String(formData.get("venue") ?? "").trim(),
+    );
+    const venueUrl =
+      submittedVenue.url ?? String(formData.get("venueUrl") ?? "");
     const draft: MatchDraft = {
       opponent: String(formData.get("opponent") ?? "").trim(),
       competition: String(formData.get("competition") ?? "").trim(),
       date: String(formData.get("date") ?? ""),
       time: String(formData.get("time") ?? ""),
-      venue: String(formData.get("venue") ?? "").trim(),
+      venue:
+        venueUrl && submittedVenue.name
+          ? `${submittedVenue.name} (${venueUrl})`
+          : submittedVenue.name,
       status: formStatus,
       teamScore: formStatus === "played" ? Number(teamScore) : null,
       opponentScore: formStatus === "played" ? Number(opponentScore) : null,
@@ -332,6 +357,7 @@ function App() {
   const winRate = stats.matches
     ? Math.round((stats.wins / stats.matches) * 100)
     : 0;
+  const editingVenue = getVenueDetails(editing?.venue ?? "");
 
   return (
     <div className="app-shell">
@@ -339,7 +365,10 @@ function App() {
         <a
           className="brand"
           href="#overview"
-          onClick={() => setMobileMenuOpen(false)}
+          onClick={() => {
+            setActiveSection("overview");
+            setMobileMenuOpen(false);
+          }}
         >
           <span className="brand-mark">
             <Activity size={21} strokeWidth={2.6} />
@@ -355,23 +384,32 @@ function App() {
         <div className="nav-caption">YOUR SPACE</div>
         <nav className="side-nav" aria-label="Main navigation">
           <a
-            className="nav-link active"
+            className={`nav-link ${activeSection === "overview" ? "active" : ""}`}
             href="#overview"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={() => {
+              setActiveSection("overview");
+              setMobileMenuOpen(false);
+            }}
           >
             <Activity size={18} /> Overview
           </a>
           <a
-            className="nav-link"
+            className={`nav-link ${activeSection === "matches" ? "active" : ""}`}
             href="#matches"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={() => {
+              setActiveSection("matches");
+              setMobileMenuOpen(false);
+            }}
           >
             <CalendarDays size={18} /> Fixtures
           </a>
           <a
-            className="nav-link"
+            className={`nav-link ${activeSection === "performance" ? "active" : ""}`}
             href="#performance"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={() => {
+              setActiveSection("performance");
+              setMobileMenuOpen(false);
+            }}
           >
             <Trophy size={18} /> Statistics
           </a>
@@ -389,9 +427,9 @@ function App() {
             <ChevronDown size={15} />
           </div>
           <div className="player-profile">
-            <div className="profile-avatar">ME</div>
+            <div className="profile-avatar">TT</div>
             <div className="profile-copy">
-              <strong>Your profile</strong>
+              <strong>Thanh Tuấn</strong>
               <span>Player profile</span>
             </div>
             <button
@@ -524,7 +562,9 @@ function App() {
               <div className="metric-top">
                 <span>GOALS</span>
                 <span className="metric-icon mint">
-                  <Goal size={17} />
+                  <span className="metric-emoji" aria-hidden="true">
+                    ⚽
+                  </span>
                 </span>
               </div>
               <div className="metric-value">
@@ -545,7 +585,9 @@ function App() {
               <div className="metric-top">
                 <span>ASSISTS</span>
                 <span className="metric-icon orange">
-                  <Sparkles size={17} />
+                  <span className="metric-emoji" aria-hidden="true">
+                    🎯
+                  </span>
                 </span>
               </div>
               <div className="metric-value">
@@ -783,6 +825,11 @@ function App() {
                     <tbody>
                       {visibleMatches.map((match) => {
                         const outcome = outcomeOf(match);
+                        const venue = getVenueDetails(match.venue);
+                        const opponentInitial = match.opponent
+                          .trim()
+                          .charAt(0)
+                          .toLocaleUpperCase("en-US");
                         return (
                           <tr key={match.id}>
                             <td>
@@ -793,10 +840,22 @@ function App() {
                             </td>
                             <td>
                               <div className="opponent-cell">
-                                <span className="opponent-badge">
-                                  {match.opponent
-                                    .slice(0, 1)
-                                    .toLocaleUpperCase("en-US")}
+                                <span
+                                  className={`opponent-badge ${
+                                    match.status === "scheduled"
+                                      ? "opponent-badge-logo"
+                                      : opponentInitial === "B"
+                                        ? "opponent-badge-blue"
+                                        : opponentInitial === "R"
+                                          ? "opponent-badge-red"
+                                          : ""
+                                  }`}
+                                >
+                                  {match.status === "scheduled" ? (
+                                    <img src="/scheduled-logo.png" alt="" />
+                                  ) : (
+                                    opponentInitial
+                                  )}
                                 </span>
                                 <div>
                                   <strong>{match.opponent}</strong>
@@ -807,15 +866,33 @@ function App() {
                             <td>
                               <div className="venue-cell">
                                 <MapPin size={14} />
-                                <span>{match.venue || "Not set"}</span>
+                                <span>
+                                  {!venue.name
+                                    ? "Not set"
+                                    : venue.url
+                                      ? (
+                                          <a
+                                            href={venue.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          >
+                                            {venue.name}
+                                          </a>
+                                        )
+                                      : venue.name}
+                                </span>
                               </div>
                             </td>
                             <td>
                               {match.status === "played" ? (
                                 <div className="score-cell">
-                                  <strong>
-                                    {match.teamScore} - {match.opponentScore}
+                                  <strong className="team-score">
+                                    {match.teamScore}
                                   </strong>
+                                  <span className="score-separator">-</span>
+                                  <span className="opponent-score">
+                                    {match.opponentScore}
+                                  </span>
                                   <span className={`outcome-text ${outcome}`}>
                                     {outcome === "win"
                                       ? "Win"
@@ -831,10 +908,16 @@ function App() {
                             <td>
                               <div className="personal-stats">
                                 <span>
-                                  <Goal size={13} /> {match.goals}
+                                  <span className="stats-emoji" aria-hidden="true">
+                                    ⚽
+                                  </span>{" "}
+                                  {match.goals}
                                 </span>
                                 <span>
-                                  <Sparkles size={13} /> {match.assists}
+                                  <span className="stats-emoji" aria-hidden="true">
+                                    🎯
+                                  </span>{" "}
+                                  {match.assists}
                                 </span>
                                 <span>
                                   <Clock3 size={13} /> {match.minutes}&apos;
@@ -894,6 +977,9 @@ function App() {
             <span>
               MY PITCH <span className="footer-separator">/</span> THE STORY IS
               YOURS
+            </span>
+            <span className="footer-copyright">
+              © {currentYear} @huynhducthanhtuan
             </span>
             <span>Capture every moment on the pitch.</span>
           </footer>
@@ -976,7 +1062,13 @@ function App() {
                   <input
                     name="venue"
                     placeholder="Venue name"
-                    defaultValue={editing?.venue ?? ""}
+                    defaultValue={editingVenue.name}
+                  />
+                  <input
+                    type="hidden"
+                    name="venueUrl"
+                    value={editingVenue.url ?? ""}
+                    readOnly
                   />
                 </label>
                 <label className="form-field">
