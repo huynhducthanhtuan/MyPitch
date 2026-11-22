@@ -155,6 +155,17 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileMenuOpen(false);
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [mobileMenuOpen]);
+
   const yearMatches = useMemo(
     () => matches.filter((match) => new Date(`${match.date}T00:00:00`).getFullYear() === year),
     [matches, year]
@@ -402,6 +413,14 @@ function App() {
           </div>
         </div>
       </aside>
+
+      <button
+        type="button"
+        className={`sidebar-backdrop ${mobileMenuOpen ? "sidebar-backdrop-visible" : ""}`}
+        aria-label="Close menu"
+        tabIndex={mobileMenuOpen ? 0 : -1}
+        onClick={() => setMobileMenuOpen(false)}
+      />
 
       <main className="main-area" id="overview">
         <header className="topbar">
