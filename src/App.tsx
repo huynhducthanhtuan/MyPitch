@@ -220,7 +220,7 @@ function App() {
       .filter(
         (match) =>
           !term ||
-          `${match.opponent} ${match.venue} ${match.competition}`
+          `${match.opponent} ${match.venue} ${match.competition} ${formatDate(match.date)}`
             .toLocaleLowerCase("en-US")
             .includes(term)
       )
@@ -716,7 +716,7 @@ function App() {
                   <input
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
-                    placeholder="Search opponent or venue..."
+                    placeholder="Search opponent, venue, or date..."
                   />
                 </label>
                 <button
